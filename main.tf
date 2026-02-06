@@ -138,7 +138,7 @@ resource "aws_launch_template" "app_lt" {
   user_data = base64encode(<<-EOF
               #!/bin/bash
               yum update -y
-              amazon-linux-extras install nginx1 -y
+              yum install -y nginx
               systemctl start nginx
               systemctl enable nginx
               EOF
