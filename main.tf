@@ -274,7 +274,6 @@ resource "aws_s3_bucket_policy" "allow_alb_logging" {
     ]
   })
 }
-
 resource "aws_cloudwatch_dashboard" "alb_asg_dashboard" {
   dashboard_name = "alb-asg-overview"
 
@@ -313,4 +312,3 @@ resource "aws_cloudwatch_dashboard" "alb_asg_dashboard" {
     ]
   })
 }
-
