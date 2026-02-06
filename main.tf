@@ -277,38 +277,44 @@ resource "aws_s3_bucket_policy" "allow_alb_logging" {
 resource "aws_cloudwatch_dashboard" "alb_asg_dashboard" {
   dashboard_name = "alb-asg-overview"
 
-  dashboard_body = jsonencode({
-    widgets = [
-      {
-        type = "metric"
-        x = 0
-        y = 0
-        width = 12
-        height = 6
-        properties = {
-          metrics = [
-            ["AWS/ApplicationELB", "RequestCount", "LoadBalancer", aws_lb.app_alb.arn_suffix]
-          ]
-          period = 60
-          stat   = "Sum"
-          title  = "ALB Request Count"
-        }
-      },
-      {
-        type = "metric"
-        x = 12
-        y = 0
-        width = 12
-        height = 6
-        properties = {
-          metrics = [
-            ["AWS/ApplicationELB", "TargetResponseTime", "LoadBalancer", aws_lb.app_alb.arn_suffix]
-          ]
-          period = 60
-          stat   = "Average"
-          title  = "Target Response Time"
-        }
+  dashboard_body = <<EOF
+{
+  "widgets": [
+    {
+      "type": "metric",
+      "x": 0,
+      "y": 0,
+      "width": 12,
+      "height": 6,
+      "properties": {
+        "metrics": [
+          ["AWS/ApplicationELB", "RequestCount", "LoadBalancer", "${aws_lb.app_alb.arn_suffix}"]
+        ],
+        "period": 60,
+        "stat": "Sum",
+        "region": "ap-south-1",
+        "title": "ALB Request Count",
+        "view": "timeSeries"
       }
-    ]
-  })
+    },
+    {
+      "type": "metric",
+      "x": 12,
+      "y": 0,
+      "width": 12,
+      "height": 6,
+      "properties": {
+        "metrics": [
+          ["AWS/ApplicationELB", "TargetResponseTime", "LoadBalancer", "${aws_lb.app_alb.arn_suffix}"]
+        ],
+        "period": 60,
+        "stat": "Average",
+        "region": "ap-south-1",
+        "title": "Target Response Time",
+        "view": "timeSeries"
+      }
+    }
+  ]
+}
+EOF
 }
