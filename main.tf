@@ -256,24 +256,7 @@ resource "aws_s3_bucket_policy" "alb_logs_policy" {
   })
 }
 
-resource "aws_s3_bucket_policy" "allow_alb_logging" {
-  bucket = "alb-access-logs-sparks-001"
 
-  policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Effect = "Allow"
-        Principal = {
-          # This is the fixed AWS Account ID for ELB in ap-south-1 (Mumbai)
-          AWS = "arn:aws:iam::718504428378:root"
-        }
-        Action   = "s3:PutObject"
-        Resource = "arn:aws:s3:::alb-access-logs-sparks-001/*"
-      }
-    ]
-  })
-}
 resource "aws_cloudwatch_dashboard" "alb_asg_dashboard" {
   dashboard_name = "alb-asg-overview"
 
