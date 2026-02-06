@@ -102,3 +102,33 @@ resource "aws_lb_listener" "http_listener" {
   }
 }
 
+data "aws_ami" "amazon_linux" {
+  most_recent = true
+  owners      = ["amazon"]
+
+  filter {
+    name   = "name"
+    values = ["amzn2-ami-hvm-*-x86_64-gp2"]
+  }
+}
+
+resource "aws_launch_template" "app_lt" {
+  name_prefix   = "app-lt-"
+  image_id      = data.aws_ami.amazon_linux.id
+  instance_type = "t2.micro"
+
+  vpc_security_group_ids = [
+    aws_security_group.ec2_sg.id
+  ]
+
+  user_data = base64encode(<<-EOF
+              #!/bin/bash
+              yum update -y
+              amazon-linux-extras install nginx1 -y
+              systemctl start nginx
+              systemctl enable nginx
+              EOF
+  )
+}
+
+
