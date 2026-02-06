@@ -95,6 +95,7 @@ resource "aws_lb" "app_alb" {
 
   security_groups = [aws_security_group.alb_sg.id]
   subnets         = data.aws_subnets.default.ids
+depends_on = [aws_s3_bucket_policy.alb_logs_policy]
  access_logs {
     bucket  = aws_s3_bucket.alb_logs.bucket
     enabled = true
