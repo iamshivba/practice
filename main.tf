@@ -99,6 +99,7 @@ resource "aws_lb" "app_alb" {
     bucket  = aws_s3_bucket.alb_logs.bucket
     enabled = true
   }
+depends_on = [aws_s3_bucket_policy.alb_logs_combined]
 }
 
 resource "aws_lb_listener" "http_listener" {
