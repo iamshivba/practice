@@ -86,9 +86,6 @@ resource "aws_lb_target_group" "app_tg" {
     healthy_threshold   = 2
     unhealthy_threshold = 2
   }
-target_group_arns = [
-  aws_lb_target_group.app_tg.arn
-]
 }
 
 resource "aws_lb" "app_alb" {
