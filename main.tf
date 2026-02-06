@@ -95,6 +95,10 @@ resource "aws_lb" "app_alb" {
 
   security_groups = [aws_security_group.alb_sg.id]
   subnets         = data.aws_subnets.default.ids
+ access_logs {
+    bucket  = aws_s3_bucket.alb_logs.bucket
+    enabled = true
+  }
 }
 
 resource "aws_lb_listener" "http_listener" {
@@ -216,4 +220,40 @@ resource "aws_autoscaling_policy" "scale_in" {
   scaling_adjustment     = -1
   cooldown               = 300
 }
+
+
+resource "aws_s3_bucket" "alb_logs" {
+  bucket = "alb-access-logs-sparks-001"
+
+  force_destroy = true
+}
+
+
+resource "aws_s3_bucket_ownership_controls" "alb_logs" {
+  bucket = aws_s3_bucket.alb_logs.id
+
+  rule {
+    object_ownership = "BucketOwnerPreferred"
+  }
+}
+
+
+resource "aws_s3_bucket_policy" "alb_logs_policy" {
+  bucket = aws_s3_bucket.alb_logs.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Principal = {
+          Service = "elasticloadbalancing.amazonaws.com"
+        }
+        Action   = "s3:PutObject"
+        Resource = "${aws_s3_bucket.alb_logs.arn}/*"
+      }
+    ]
+  })
+}
+
 
