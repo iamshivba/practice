@@ -122,6 +122,7 @@ resource "aws_launch_template" "app_lt" {
   name_prefix   = "app-lt-"
   image_id      = data.aws_ami.amazon_linux.id
   instance_type = "t3.micro"
+  key_name = "shiv_key"
 
   vpc_security_group_ids = [
     aws_security_group.ec2_sg.id
